@@ -1,22 +1,36 @@
-import { WifiOff } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export function OfflineBanner() {
-  const [offline, setOffline] = useState(!navigator.onLine);
+const OfflineBanner = () => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
   useEffect(() => {
-    const on  = () => setOffline(false);
-    const off = () => setOffline(true);
-    window.addEventListener('online', on);
-    window.addEventListener('offline', off);
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
     return () => {
-      window.removeEventListener('online', on);
-      window.removeEventListener('offline', off);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
-  if (!offline) return null;
+
   return (
-    <div className="fixed top-0 inset-x-0 z-[100] flex items-center justify-center gap-2 h-10 bg-amber-500 text-amber-950 text-sm font-medium">
-      <WifiOff size={14} /> Çevrimdışı — Değişiklikler kaydedilecek
-    </div>
+    <AnimatePresence>
+      {!isOnline && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="fixed top-0 left-0 right-0 z-50 bg-red-500 text-white p-3 text-center text-sm font-medium"
+        >
+          İnternet bağlantınız yok. Çevrimdışı modda çalışıyorsunuz.
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
-}
+};
+
+export { OfflineBanner };

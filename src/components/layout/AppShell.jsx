@@ -1,98 +1,24 @@
-import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, BarChart2, Settings, Bell, Menu } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useStore } from '@/store';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
-const navItems = [
-  { to: '/',         icon: LayoutDashboard, label: 'Anasayfa' },
-  { to: '/analiz',    icon: BarChart2,      label: 'Analiz'  },
-  { to: '/ayarlar',   icon: Settings,        label: 'Ayarlar'   },
-];
-
-export function AppShell({ children }) {
-  const { theme, toggleTheme } = useStore();
+const AppShell = ({ children }) => {
+  const location = useLocation();
 
   return (
-    <div className="flex h-dvh bg-[var(--bg-base)] text-[var(--text-primary)] overflow-hidden">
-      {/* ── Desktop Sidebar ── */}
-      <aside className="hidden md:flex flex-col w-60 border-r border-[var(--border)] bg-[var(--bg-surface)] shrink-0">
-        {/* Logo */}
-        <div className="h-16 flex items-center px-5 border-b border-[var(--border)]">
-          <span className="font-bold text-lg tracking-tight">19 Mayıs</span>
-        </div>
+    <motion.div
+      key={location.pathname}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen flex flex-col bg-[var(--bg-base)]"
+    >
+      <main className="flex-1 p-4 md:p-8">
+        {children}
+      </main>
+    </motion.div>
+  );
+};
 
-        {/* Nav */}
-        <nav className="flex-1 p-3 space-y-0.5">
-          {navItems.map(({ to, icon: Icon, label }) => (
-            <NavLink key={to} to={to} end className={({ isActive }) => cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-              isActive
-                ? "bg-blue-500/10 text-blue-500"
-                : "text-[var(--text-muted)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
-            )}>
-              <Icon size={18} />
-              {label}
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* User Footer */}
-        <div className="p-3 border-t border-[var(--border)]">
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-colors">
-            <img src="/avatar.png" className="w-8 h-8 rounded-full object-cover" alt="avatar" />
-            <div className="flex-1 text-left">
-              <p className="text-xs font-semibold">Kullanıcı</p>
-              <p className="text-xs text-[var(--text-muted)]">kullanici@example.com</p>
-            </div>
-            <Settings size={14} className="text-[var(--text-muted)]" />
-          </button>
-        </div>
-      </aside>
-
-      {/* ── Main ── */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
-        <header className="h-16 shrink-0 flex items-center justify-between px-4 md:px-6 border-b border-[var(--border)] bg-[var(--bg-surface)]/80 backdrop-blur-xl sticky top-0 z-30">
-          <h1 className="font-semibold text-[var(--text-primary)]">Anasayfa</h1>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-colors"
-            >
-              {theme === 'dark' ? (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-              )}
-            </button>
-            <button className="relative p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-colors">
-              <Bell size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full" />
-            </button>
-          </div>
-        </header>
-
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
-          {children || <Outlet />}
-        </main>
-      </div>
-
-      {/* ── Mobile Bottom Navigation (PWA Safe Area) ── */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-xl border-t border-[var(--border)] pb-[env(safe-area-inset-bottom)]">
-        <div className="flex h-16">
-          {navItems.map(({ to, icon: Icon, label }) => (
-            <NavLink key={to} to={to} end className={({ isActive }) => cn(
-              "flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors",
-              isActive ? "text-blue-500" : "text-[var(--text-muted)]"
-            )}>
-              <Icon size={22} />
-              {label}
-            </NavLink>
-          ))}
-        </div>
-      </nav>
-    </div>
-  )
-}
+export { AppShell };
