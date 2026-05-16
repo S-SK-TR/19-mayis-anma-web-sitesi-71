@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 
 const VideoPlayer = ({ videoSrc, posterSrc, title, description }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -52,10 +51,7 @@ const VideoPlayer = ({ videoSrc, posterSrc, title, description }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className={cn(
-        "glass-card rounded-2xl overflow-hidden shadow-2xl",
-        isFullscreen ? "fixed inset-0 z-50 rounded-none" : "max-w-4xl mx-auto"
-      )}
+      className={`glass-card rounded-2xl overflow-hidden shadow-2xl ${isFullscreen ? "fixed inset-0 z-50 rounded-none" : "max-w-4xl mx-auto"}`}
     >
       <div className="relative aspect-video">
         <video

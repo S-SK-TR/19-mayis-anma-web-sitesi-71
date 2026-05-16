@@ -2,7 +2,6 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/store';
 import { AppShell } from '@/components/layout/AppShell';
-import { OfflineBanner } from '@/components/OfflineBanner';
 import { VideoPlayer } from '@/components/VideoPlayer';
 
 function App() {
@@ -10,7 +9,6 @@ function App() {
 
   return (
     <div className={`app ${theme}`}>
-      <OfflineBanner />
       <AppShell>
         <AnimatePresence mode="wait">
           <motion.div

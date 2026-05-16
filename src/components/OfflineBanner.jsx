@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const OfflineBanner = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -17,19 +17,16 @@ const OfflineBanner = () => {
     };
   }, []);
 
+  if (isOnline) return null;
+
   return (
-    <AnimatePresence>
-      {!isOnline && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="fixed top-0 left-0 right-0 z-50 bg-red-500 text-white p-3 text-center text-sm font-medium"
-        >
-          İnternet bağlantınız yok. Çevrimdışı modda çalışıyorsunuz.
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="fixed top-0 left-0 right-0 z-50 p-4 bg-red-500 text-white text-center glass-card"
+    >
+      İnternet bağlantınız yok. Çevrimdışı modda çalışıyorsunuz.
+    </motion.div>
   );
 };
 
